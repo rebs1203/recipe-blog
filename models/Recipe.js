@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const RecipeSchema = mongoose.Schema({
-    name: {
+    recipeName: {
         type: String,
         required: [true, 'Please provide the name of your recipe']
     },
@@ -9,7 +9,12 @@ const RecipeSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User',
         required: [true, 'Please provide user']
-    }, 
+    },
+    cuisineType: {
+        type: String,
+        enum: ['Italian', 'Japanese', 'Chinese', 'Indian', 'American', 'Other'],
+        required: [true, 'Please select the cuisine type']
+    },
     estTimeOfPrep: {
         type: String,
         required: [true, 'Please provide the estimate time of preparation for your recipe']

@@ -3,11 +3,11 @@ const User = require('../models/User.js')
 const register = async (req, res, next) => {
     let validationError = false
     try {
-        await User.create(req.body)
+        const user = await User.create({...req.body})
+        const token = user.createJWT()
+        res.status(200).json({user: {name: user.username}, token})
     } catch (e) {
-        if (e.constructor.name === 'ValidationError') {
-            req.flash('error', 'Incorrect e-mail or password')
-        } else if (e.name === "MongoServerError" && e.code === 11000) {
+        if (e.name === "MongoServerError" && e.code === 11000) {
             req.flash("error", "That email address is already registered.");
         } else {
             return next(e);
@@ -27,10 +27,29 @@ const logoff = (req, res) => {
     res.redirect('/')
 }
 
-const logon = (req, res) => {
-    if (req.user) {
-        return res.redirect('/')
+const logon = async (req, res) => {
+    const {email, password} = req.body
+
+    if(!email || !password) {
+        req.flash('error', 'Please provide e-mail and password')
     }
+
+    const user = await User.findOne({email})
+
+    if(!user) {
+        res.status(404)
+        req.flash('error', 'Incorrect e-mail')
+    }
+
+    const isPasswordCorrect = await user.comparePasswords(password)
+    
+    if (!isPasswordCorrect) {
+        res.status(404)
+        req.flash('error', 'Incorrect password')
+    }
+
+    const token = user.createJWT()
+    res.status(200).json({user:{name: user.username}, token})
 }
 
 module.exports = {
