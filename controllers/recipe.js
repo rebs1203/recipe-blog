@@ -1,13 +1,13 @@
+const { BadRequestError, NotFoundError } = require('../errors/index.js')
 const Recipe = require('../models/Recipe.js')
 
 const getUserRecipes = async (req, res) => {
     try {
-        const userRecipes = await Recipe.find({createdBy:req.user.userId})
+        const userRecipes = await Recipe.find({createdBy:req.user.id})
         res.json({userRecipes})
     } catch (error) {
-        res.status(500)
         console.log(error)
-        req.flash('error', 'Internal Server Error')
+        throw new BadRequestError('Internal Server Error.')
     }
 }
 
@@ -16,62 +16,81 @@ const getAllRecipes = async (req, res) => {
         const allRecipes = await Recipe.find()
         res.json({allRecipes})
     } catch (error) {
-        res.status(500)
         console.log(error)
-        req.flash('error', 'Internal Server Error')
+        throw new BadRequestError('Internal Server Error.')
+    }
+}
+
+const getRecipe = async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const recipe = await Recipe.findById(id)
+        if(!recipe) {
+            throw new NotFoundError('Recipe not found.')
+        }
+    } catch (error) {
+        throw new BadRequestError('Undefined Error.')
     }
 }
 
 
-const createRecipe = async (req, res) => {
-    try {
-        await Recipe.create(req.body)
-        req.flash('info', 'Your recipe was successfully created.')
-    } catch (error) {
-        res.status(500)
-        req.flash('error', 'Internal Server Error.')
+const createRecipe =  (req, res) => {
+    const {
+        body: { recipeName, cuisineType, estTimeOfPrep, ingredients, prepInstructions }
+    } = req
+
+    if(!recipeName || !cuisineType || !estTimeOfPrep || !ingredients ||! prepInstructions) {
+        throw new BadRequestError('Fields cannot be empty.')
+    } else {
+        const newRecipe = {
+            recipeName: recipeName,
+            createdBy: req.user._id,
+            cuisineType: cuisineType,
+            estTimeOfPrep: estTimeOfPrep,
+            ingredients: ingredients,
+            prepInstructions: prepInstructions
+        }
+        Recipe.create(newRecipe)
+        res.status(200)
     }
 }
 
 const editRecipe = async (req, res) => {
-    const id = req.params._id
-
-    const existingRecipe = Recipe.findById(id)
 
     const updatedData = { $set: {
-        name: req.body.recipeName || existingRecipe.recipeName,
-        cuisineType: req.body.cuisineType || existingRecipe.cuisineType,
-        estTimeOfPrep: req.body.estTimeOfPrep || existingRecipe.estTimeOfPrep,
-        ingredients: req.body.ingredients || existingRecipe.ingredients,
-        prepInstructions: req.body.prepInstructions || existingRecipe.prepInstructions
+        name: req.body.recipeName || recipe.recipeName,
+        cuisineType: req.body.cuisineType || recipe.cuisineType,
+        estTimeOfPrep: req.body.estTimeOfPrep || recipe.estTimeOfPrep,
+        ingredients: req.body.ingredients || recipe.ingredients,
+        prepInstructions: req.body.prepInstructions || recipe.prepInstructions
     }}
 
     try {
-        await Recipe.updateOne({_id: id}, updatedData)
-        req.flash('info', 'Your recipe was successfully updated.')
+        await Recipe.findByIdAndUpdate({_id: id}, updatedData, { new: true, runValidators: true })
+        res.status(200)
     } catch (error) {
-        res.status(500)
         console.log(error)
-        req.flash('error', 'Recipe could not be updated.')
+        throw new BadRequestError('Recipe could not be updated.')
     }
 }
 
 const deleteRecipe = async (req, res) => {
-    const id = req.params._id
+    const id = req.params.id
 
     try {
         await Recipe.deleteOne({_id: id})
-        req.flash('info', 'Your recipe was successfully deleted.')
+        res.status(200)
     } catch (error) {
-        res.status(500)
         console.log(error)
-        req.flash('error', 'Could not delete recipe.')
+        throw new BadRequestError('Recipe could not be deleted.')
     }
 }
 
 module.exports = {
     getUserRecipes,
     getAllRecipes,
+    getRecipe,
     createRecipe,
     editRecipe,
     deleteRecipe,

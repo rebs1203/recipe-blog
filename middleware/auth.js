@@ -1,3 +1,5 @@
+const { NotFoundError } = require("../errors/index.js")
+
 const auth = (req, res, next) => {
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET)
@@ -6,6 +8,6 @@ const auth = (req, res, next) => {
     } catch (error) {
         res.status(401)
         console.log(error)
-        req.flash('error', 'Something went wrong, please try logging in again.')
+        throw new NotFoundError('User not found. Please try again or click register.')
     }
 }

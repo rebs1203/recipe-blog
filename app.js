@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 require('dotenv').config()
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const helmet = require('helmet')
 const cors = require('cors')
@@ -16,6 +15,18 @@ const url = process.env.MONGO_URI
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+app.use(cors());
+
+//security
+app.use(helmet());
+app.use(xss());
+
+const limiter = rateLimiter({
+    windowMs: 15 * 60 * 1000, 
+    max: 100, 
+});
+app.use(limiter);
 
 //middleware
 app.use(authMiddleware)
