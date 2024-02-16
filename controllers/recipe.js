@@ -27,6 +27,7 @@ const getAllRecipes = async (req, res) => {
         }
         if (cuisineType) {
             const filteredRecipes = allRecipes.filter(recipe => recipe.cuisineType === cuisineType);
+            console.log(filteredRecipes)
             res.json({filteredRecipes})
         } else {
             res.json({allRecipes})
