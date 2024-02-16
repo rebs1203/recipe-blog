@@ -1,10 +1,12 @@
 const { BadRequestError, NotFoundError } = require('../errors/index.js')
 const Recipe = require('../models/Recipe.js')
+const User = require('../models/User.js')
 
 const getUserRecipes = async (req, res) => {
+    const { user } = req.body
     try {
-        const userRecipes = await Recipe.find({createdBy:req.user.id})
-        console.log(userRecipes)
+        const { _id } = await User.find({user})
+        const userRecipes = await Recipe.find({_id})
         if (!userRecipes) {
             throw new BadRequestError('Internal Server Error.')
         } else {
