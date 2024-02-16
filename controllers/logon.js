@@ -5,10 +5,12 @@ const User = require('../models/User.js')
 const register = async (req, res, next) => {
     try {
         const user = await User.create({...req.body})
+        console.log(user)
         if (!user) {
             throw new NotFoundError('User not found.')
         } else {
             const token = user.createJWT()
+            console.log(token)
             res.status(200).json({user: {name: user.username}, token})
         }
     } catch (e) {
