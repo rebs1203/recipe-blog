@@ -20,6 +20,7 @@ const getUserRecipes = async (req, res) => {
 const getAllRecipes = async (req, res) => {
     try {
         const cuisineType = req.query.params
+        console.log(cuisineType)
         const allRecipes = await Recipe.find()
         if (!allRecipes) {
             throw new BadRequestError('Internal Server Error.')
