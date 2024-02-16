@@ -4,6 +4,7 @@ const Recipe = require('../models/Recipe.js')
 const getUserRecipes = async (req, res) => {
     try {
         const userRecipes = await Recipe.find({createdBy:req.user.id})
+        console.log(userRecipes)
         if (!userRecipes) {
             throw new BadRequestError('Internal Server Error.')
         } else {
