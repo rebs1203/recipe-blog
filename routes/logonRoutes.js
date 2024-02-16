@@ -8,7 +8,7 @@ const {
 } = require("../controllers/logon");
 
 router.route("/register").post(register);
-router.route("/logon").get(logon)
-router.route("/logoff").get(logoff);
+router.route("/logon").post(logon)
+router.route("/logoff").post(logoff);
 
 module.exports = router;

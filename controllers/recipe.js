@@ -4,59 +4,94 @@ const Recipe = require('../models/Recipe.js')
 const getUserRecipes = async (req, res) => {
     try {
         const userRecipes = await Recipe.find({createdBy:req.user.id})
-        res.json({userRecipes})
+        if (!userRecipes) {
+            throw new BadRequestError('Internal Server Error.')
+        } else {
+            res.json({userRecipes})
+        }
     } catch (error) {
         console.log(error)
-        throw new BadRequestError('Internal Server Error.')
+        if (error instanceof BadRequestError) {
+            res.status(500).json({ message: error.message });
+        }
     }
 }
 
 const getAllRecipes = async (req, res) => {
     try {
+        const cuisineType = req.query.params
         const allRecipes = await Recipe.find()
-        res.json({allRecipes})
+        if (!allRecipes) {
+            throw new BadRequestError('Internal Server Error.')
+        }
+        if (cuisineType) {
+            const filteredRecipes = allRecipes.filter(recipe => recipe.cuisineType === cuisineType);
+            res.json({filteredRecipes})
+        } else {
+            res.json({allRecipes})
+        }
     } catch (error) {
         console.log(error)
-        throw new BadRequestError('Internal Server Error.')
+        if (error instanceof BadRequestError) {
+            res.status(500).json({ message: error.message });
+        }
     }
 }
 
 const getRecipe = async (req, res) => {
     const id = req.params.id
-
+    console.log(id)
     try {
-        const recipe = await Recipe.findById(id)
-        if(!recipe) {
-            throw new NotFoundError('Recipe not found.')
+        if (!id) {
+            throw new NotFoundError('Recipe not found')
+        } else {
+            const recipe = await Recipe.findById(id);
+                res.status(200).json({ recipe });
         }
     } catch (error) {
-        throw new BadRequestError('Undefined Error.')
+        if (error instanceof NotFoundError) {
+            res.status(404).json({ message: error.message });
+        } else {
+            console.error(error);
+            res.status(500).json({ message: 'Internal Server Error.' });
+        }
     }
 }
 
 
-const createRecipe =  (req, res) => {
+const createRecipe = async (req, res) => {
+    console.log(req.body)
     const {
         body: { recipeName, cuisineType, estTimeOfPrep, ingredients, prepInstructions }
     } = req
 
-    if(!recipeName || !cuisineType || !estTimeOfPrep || !ingredients ||! prepInstructions) {
-        throw new BadRequestError('Fields cannot be empty.')
-    } else {
-        const newRecipe = {
-            recipeName: recipeName,
-            createdBy: req.user._id,
-            cuisineType: cuisineType,
-            estTimeOfPrep: estTimeOfPrep,
-            ingredients: ingredients,
-            prepInstructions: prepInstructions
+    try {
+            if(!recipeName || !cuisineType || !estTimeOfPrep || !ingredients || !prepInstructions) {
+                throw new BadRequestError('Fields cannot be empty.')
+            } else {
+                console.log('we got here')
+                const newRecipe = {
+                    recipeName: recipeName,
+                    cuisineType: cuisineType,
+                    estTimeOfPrep: estTimeOfPrep,
+                    ingredients: ingredients,
+                    prepInstructions: prepInstructions
+                }
+                const recipes = await Recipe.create(newRecipe)
+                res.status(200).json({recipes})
+            }
+        } catch (error) {
+            console.log(error)
+            if (error instanceof BadRequestError) {
+                res.status(500).json({ message: error.message });
+            }
         }
-        Recipe.create(newRecipe)
-        res.status(200)
     }
-}
+
 
 const editRecipe = async (req, res) => {
+    const id = req.params.id
+    const recipe = Recipe.findById(id)
 
     const updatedData = { $set: {
         name: req.body.recipeName || recipe.recipeName,
@@ -67,11 +102,17 @@ const editRecipe = async (req, res) => {
     }}
 
     try {
-        await Recipe.findByIdAndUpdate({_id: id}, updatedData, { new: true, runValidators: true })
-        res.status(200)
+        const updatedRecipe = await Recipe.findByIdAndUpdate({_id: id}, updatedData, { new: true, runValidators: true })
+        if (!updatedRecipe) {
+            throw new BadRequestError('Recipe could not be updated.')
+        } else {
+            res.status(200).json({updatedRecipe})
+        }
     } catch (error) {
         console.log(error)
-        throw new BadRequestError('Recipe could not be updated.')
+        if (error instanceof BadRequestError) {
+            res.status(500).json({message: 'Recipe could not be updated.'})
+        }
     }
 }
 
@@ -79,11 +120,17 @@ const deleteRecipe = async (req, res) => {
     const id = req.params.id
 
     try {
-        await Recipe.deleteOne({_id: id})
-        res.status(200)
+        if (!id) {
+            throw new BadRequestError('Recipe could not be deleted.')
+        } else {
+            await Recipe.deleteOne({_id: id})
+            res.status(200).json(`Product with id ${id} was successfully deleted.`)
+        }
     } catch (error) {
         console.log(error)
-        throw new BadRequestError('Recipe could not be deleted.')
+        if (error instanceof BadRequestError) {
+            res.status(500).json({message: 'Recipe could not be deleted.'})
+        }
     }
 }
 
