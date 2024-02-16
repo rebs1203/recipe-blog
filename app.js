@@ -18,7 +18,7 @@ app.use(express.static('public'));
 app.use(express.json())
 
 app.use(cors({
-    origin: 'https://recipe-blog-react.onrender.com/'
+    origin: 'https://recipe-blog-react.onrender.com'
 }));
 
 //security
