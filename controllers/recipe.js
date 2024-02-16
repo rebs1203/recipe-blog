@@ -19,14 +19,14 @@ const getUserRecipes = async (req, res) => {
 
 const getAllRecipes = async (req, res) => {
     try {
-        const cuisineType = req.query
+        const cuisineType = req.query.name
         console.log(cuisineType)
         const allRecipes = await Recipe.find()
         if (!allRecipes) {
             throw new BadRequestError('Internal Server Error.')
         }
         if (cuisineType) {
-            const filteredRecipes = allRecipes.filter(recipe => recipe.cuisineType === cuisineType);
+            const filteredRecipes = allRecipes.filter(recipe => recipe.cuisineType + '=' === cuisineType);
             console.log(filteredRecipes)
             res.json({filteredRecipes})
         } else {
