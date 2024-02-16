@@ -3,10 +3,9 @@ const Recipe = require('../models/Recipe.js')
 const User = require('../models/User.js')
 
 const getUserRecipes = async (req, res) => {
-    const { user } = req.body
+    const { userId } = req.body
     try {
-        const { _id } = await User.find({user})
-        const userRecipes = await Recipe.find({_id})
+        const userRecipes = await Recipe.find({userId})
         if (!userRecipes) {
             throw new BadRequestError('Internal Server Error.')
         } else {
@@ -63,9 +62,8 @@ const getRecipe = async (req, res) => {
 
 
 const createRecipe = async (req, res) => {
-    console.log(req.body)
     const {
-        body: { recipeName, cuisineType, estTimeOfPrep, ingredients, prepInstructions }
+        body: { recipeName, createdBy, cuisineType, estTimeOfPrep, ingredients, prepInstructions }
     } = req
 
     try {
@@ -75,6 +73,7 @@ const createRecipe = async (req, res) => {
                 console.log('we got here')
                 const newRecipe = {
                     recipeName: recipeName,
+                    createdBy: createdBy,
                     cuisineType: cuisineType,
                     estTimeOfPrep: estTimeOfPrep,
                     ingredients: ingredients,

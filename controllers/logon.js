@@ -11,7 +11,7 @@ const register = async (req, res, next) => {
         } else {
             const token = user.createJWT()
             console.log(token)
-            res.status(200).json({user: {name: user.username}, token})
+            res.status(200).json({user: {id: user._id, name: user.username}, token})
         }
     } catch (e) {
         if (e.name === "MongoServerError" && e.code === 11000) {
@@ -50,7 +50,7 @@ const logon = async (req, res) => {
             throw new UnauthenticatedError('Incorrect email or password.');
         } else {
             const token = user.createJWT();
-            res.status(200).json({ user: { name: user.username }, token });
+            res.status(200).json({ user: {id: user._id, name: user.username }, token });
         }
 
     } catch (error) {
