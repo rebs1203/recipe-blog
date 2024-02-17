@@ -50,7 +50,6 @@ const logon = async (req, res) => {
             throw new UnauthenticatedError('Incorrect email or password.');
         } else {
             const token = user.createJWT();
-            console.log(user)
             res.status(200).json({ user: {id: user._id, name: user.username }, token });
         }
 
