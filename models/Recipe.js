@@ -6,7 +6,7 @@ const RecipeSchema = mongoose.Schema({
         required: [true, 'Please provide the name of your recipe']
     },
     createdBy: {
-        type: mongoose.Types.ObjectId,
+        type: String,
         ref: 'User',
     },
     cuisineType: {

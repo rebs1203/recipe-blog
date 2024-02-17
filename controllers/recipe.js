@@ -1,6 +1,5 @@
 const { BadRequestError, NotFoundError } = require('../errors/index.js')
 const Recipe = require('../models/Recipe.js')
-const User = require('../models/User.js')
 
 const getUserRecipes = async (req, res) => {
     const { userId } = req.body
@@ -80,6 +79,7 @@ const createRecipe = async (req, res) => {
                     prepInstructions: prepInstructions
                 }
                 const recipes = await Recipe.create(newRecipe)
+                console.log(recipes)
                 res.status(200).json({recipes})
             }
         } catch (error) {
