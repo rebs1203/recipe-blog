@@ -4,7 +4,7 @@ const Recipe = require('../models/Recipe.js')
 const getUserRecipes = async (req, res) => {
     const { userId } = req.body
     try {
-        const userRecipes = await Recipe.find({userId})
+        const userRecipes = await Recipe.find(ObjectId(userId))
         if (!userRecipes) {
             throw new BadRequestError('Internal Server Error.')
         } else {
