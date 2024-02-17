@@ -11,7 +11,7 @@ const {
 } = require('../controllers/recipe.js')
 
 router.route('/').post(getAllRecipes)
-router.route('/mypage').post(getUserRecipes).post(createRecipe)
+router.route('/mypage').patch(getUserRecipes).post(createRecipe)
 router.route('/mypage/:id').get(getRecipe).patch(editRecipe).delete(deleteRecipe)
 
 
