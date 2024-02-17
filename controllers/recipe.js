@@ -61,10 +61,10 @@ const getRecipe = async (req, res) => {
 
 
 const createRecipe = async (req, res) => {
+    console.log(req.body)
     const {
         body: { recipeName, createdBy, cuisineType, estTimeOfPrep, ingredients, prepInstructions }
     } = req
-
     try {
             if(!recipeName || !cuisineType || !estTimeOfPrep || !ingredients || !prepInstructions) {
                 throw new BadRequestError('Fields cannot be empty.')
