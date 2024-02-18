@@ -97,7 +97,7 @@ const editRecipe = async (req, res) => {
     const recipe = Recipe.findById(id)
 
     const updatedData = { $set: {
-        name: req.body.recipeName || recipe.recipeName,
+        recipeName: req.body.recipeName || recipe.recipeName,
         cuisineType: req.body.cuisineType || recipe.cuisineType,
         estTimeOfPrep: req.body.estTimeOfPrep || recipe.estTimeOfPrep,
         ingredients: req.body.ingredients || recipe.ingredients,
