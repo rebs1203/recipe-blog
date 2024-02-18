@@ -8,8 +8,10 @@ const getUserRecipes = async (req, res) => {
     try {
         // const o_id = new ObjectId(userId)
         // console.log(o_id)
-        const userRecipes = await Recipe.findById(userId)
+        const userRecipes = await Recipe.find({_id: userId})
+        const test = await Recipe.find({recipeName: 'rebeca'})
         console.log(userRecipes)
+        console.log(test)
         if (!userRecipes) {
             throw new BadRequestError('Internal Server Error.')
         } else {
