@@ -6,12 +6,10 @@ const getUserRecipes = async (req, res) => {
     const { userId } = req.body
     console.log(userId)
     try {
-        // const o_id = new ObjectId(userId)
-        // console.log(o_id)
-        const userRecipes = await Recipe.find({_id: userId})
-        const test = await Recipe.find({recipeName: 'rebeca'})
+        const o_id = new ObjectId(userId)
+        console.log(o_id)
+        const userRecipes = await Recipe.find({_id: o_id})
         console.log(userRecipes)
-        console.log(test)
         if (!userRecipes) {
             throw new BadRequestError('Internal Server Error.')
         } else {
