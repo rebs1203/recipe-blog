@@ -21,6 +21,10 @@ app.use(cors({
     origin: 'https://recipe-blog-react.onrender.com'
 }));
 
+app.use(cors({
+    origin: 'http://localhost:3000'
+}))
+
 //security
 app.use(helmet());
 app.use(xss());
