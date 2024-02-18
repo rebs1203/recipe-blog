@@ -17,9 +17,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.json())
 
-app.use(cors({
-    origin: 'https://recipe-blog-react.onrender.com'
-}));
+// app.use(cors({
+//     origin: 'https://recipe-blog-react.onrender.com'
+// }));
 
 app.use(cors({
     origin: 'http://localhost:3000'
