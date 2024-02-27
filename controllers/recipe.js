@@ -28,19 +28,18 @@ const getAllRecipes = async (req, res) => {
 }
 
 const getRecipe = async (req, res) => {
+    const id = req.params.id
     try {
         const recipe = await Recipe.findOne({
             _id: id,
             createdBy: req.user.userId
         });
+        if(!recipe) {
+            throw new NotFoundError('Recipe not found')
+        }
         res.status(200).json({ recipe });
     } catch (error) {
-        if (error instanceof NotFoundError) {
-            res.status(404).json({ message: error.message });
-        } else {
-            console.error(error);
-            res.status(500).json({ message: 'Internal Server Error.' });
-        }
+        res.status(500).json({ message: 'Internal Server Error.' });
     }
 }
 
