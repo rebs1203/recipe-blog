@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 const xss = require('xss-clean')
 const rateLimiter = require('express-rate-limit')
+const multer = require('multer')
 const connectDB = require('./db/connect.js')
 const authMiddleware = require('./middleware/auth.js')
 const logonRoutes = require('./routes/logonRoutes.js')
@@ -17,13 +18,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.json())
 
-app.use(cors({
+app.use(cors([{
     origin: 'https://recipe-blog-react.onrender.com'
-}));
+},
+{
+    origin: 'http://localhost:3000'
+}]));
 
-// app.use(cors({
-//     origin: 'http://localhost:3000'
-// }))
 
 //security
 app.use(helmet());
@@ -34,6 +35,12 @@ const limiter = rateLimiter({
     max: 100, 
 });
 app.use(limiter);
+
+//middleware
+
+const storage = multer.memoryStorage()
+
+const upload = multer({storage: storage})
 
 //routers 
 app.use('/recipe-blog', logonRoutes)

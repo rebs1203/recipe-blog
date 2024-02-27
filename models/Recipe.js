@@ -18,6 +18,10 @@ const RecipeSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please provide the estimate time of preparation for your recipe']
     },
+    image: {
+        data: Buffer,
+        contentType: String
+    },
     ingredients: {
         type: String,
         required: [true, "Please provide your recipe's ingredients"]

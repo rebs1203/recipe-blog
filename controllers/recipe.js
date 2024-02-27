@@ -48,13 +48,14 @@ const getRecipe = async (req, res) => {
 const createRecipe = async (req, res) => {
     console.log(req.body)
     const {
-        body: { recipeName, createdBy, cuisineType, estTimeOfPrep, ingredients, prepInstructions }
+        body: { recipeName, createdBy, cuisineType, estTimeOfPrep, image ,ingredients, prepInstructions }
     } = req
     try {
             const newRecipe = {
                 recipeName: recipeName,
                 createdBy: createdBy,
                 cuisineType: cuisineType,
+                image: image,
                 estTimeOfPrep: estTimeOfPrep,
                 ingredients: ingredients,
                 prepInstructions: prepInstructions
@@ -88,6 +89,7 @@ const editRecipe = async (req, res) => {
             recipeName: req.body.recipeName || recipe.recipeName,
             cuisineType: req.body.cuisineType || recipe.cuisineType,
             estTimeOfPrep: req.body.estTimeOfPrep || recipe.estTimeOfPrep,
+            image: req.body.image || recipe.image, 
             ingredients: req.body.ingredients || recipe.ingredients,
             prepInstructions: req.body.prepInstructions || recipe.prepInstructions
         }}
