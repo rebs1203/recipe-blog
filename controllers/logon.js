@@ -2,23 +2,18 @@ const { BadRequestError, NotFoundError } = require('../errors/index.js')
 const { UnauthenticatedError } = require('../errors/index.js')
 const User = require('../models/User.js')
 
-const register = async (req, res, next) => {
+const register = async (req, res) => {
     try {
         const user = await User.create({...req.body})
-        console.log(user)
-        if (!user) {
-            throw new NotFoundError('User not found.')
-        } else {
-            const token = user.createJWT()
-            console.log(token)
-            res.status(200).json({user: {id: user._id, name: user.username}, token})
-        }
+        const token = user.createJWT()
+        res.status(200).json({user: {id: user._id, name: user.username}, token})
     } catch (e) {
         if (e.name === "MongoServerError" && e.code === 11000) {
-            res.status(500).json({message: 'Email already in use.'})
-            throw new BadRequestError('Error: e-mail is already in use.')
-        } else if (error instanceof NotFoundError) {
-            res.status(404).json({message: error.message})
+            res.status(400).json({message: 'Email already in use.'})
+        } else if(e.name == "ValidationError") {
+            res.status(400).json({message: e.message})
+        } else {
+            res.status(500).json({ message: 'Internal Server Error.' });
         }
     }
 }
