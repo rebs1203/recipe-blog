@@ -39,7 +39,12 @@ const getRecipe = async (req, res) => {
         }
         res.status(200).json({ recipe });
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error.' });
+        if (error instanceof NotFoundError) {
+            res.status(404).json({ message: error.message });
+        } else {
+            console.error(error);
+            res.status(500).json({ message: 'Internal Server Error.' });
+        }
     }
 }
 
