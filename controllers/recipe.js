@@ -35,6 +35,9 @@ const getRecipe = async (req, res) => {
             _id: id,
             createdBy: req.user.userId
         });
+        if(!recipe) {
+            throw new NotFoundError('Recipe not found')
+        }
         res.status(200).json({ recipe });
     } catch (error) {
         if (error instanceof NotFoundError) {
