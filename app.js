@@ -40,18 +40,25 @@ app.use(limiter);
 
 const storage = multer.memoryStorage()
 
-const upload = multer({storage: storage})
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 30 * 1024 * 1024,
+        files: 1,
+        fields: 10 
+    }
+})
 
 //routers 
 app.use('/recipe-blog', logonRoutes)
-app.use('/recipe-blog', authMiddleware, recipeRoutes)
+app.use('/recipe-blog', authMiddleware, upload.single('image'), recipeRoutes)
 
 app.get('/rebeca', (req, res) => {
     res.send('Hello World')
     console.log('hello world')
 })
 
-const port = 3001
+const port = 3000
 
 const start = async () => {
     try {
