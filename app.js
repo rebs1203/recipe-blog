@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 const xss = require('xss-clean')
 const rateLimiter = require('express-rate-limit')
+const multer = require('multer')
 const connectDB = require('./db/connect.js')
 const authMiddleware = require('./middleware/auth.js')
 const logonRoutes = require('./routes/logonRoutes.js')
@@ -22,8 +23,6 @@ app.use(cors([{
 },
 {
     origin: 'http://localhost:3000'
-}
-]));
 
 //security
 app.use(helmet());
@@ -35,16 +34,29 @@ const limiter = rateLimiter({
 });
 app.use(limiter);
 
+//middleware
+
+const storage = multer.memoryStorage()
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 30 * 1024 * 1024,
+        files: 1,
+        fields: 10 
+    }
+})
+
 //routers 
 app.use('/recipe-blog', logonRoutes)
-app.use('/recipe-blog', authMiddleware, recipeRoutes)
+app.use('/recipe-blog', authMiddleware, upload.single('image'), recipeRoutes)
 
 app.get('/rebeca', (req, res) => {
     res.send('Hello World')
     console.log('hello world')
 })
 
-const port = 3001
+const port = 3000
 
 const start = async () => {
     try {
