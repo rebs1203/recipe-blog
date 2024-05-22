@@ -58,7 +58,7 @@ app.get('/rebeca', (req, res) => {
     console.log('hello world')
 })
 
-const port = 3000
+const port = process.env.PORT || 3000
 
 const start = async () => {
     try {
