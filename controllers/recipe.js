@@ -102,7 +102,6 @@ const editRecipe = async (req, res) => {
         }
 
 
-        console.log(req.file)
         const updatedData = { $set: {
             recipeName: req.body.recipeName || recipe.recipeName,
             cuisineType: req.body.cuisineType || recipe.cuisineType,
