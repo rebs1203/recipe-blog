@@ -27,14 +27,6 @@ const limiter = rateLimiter({
 });
 app.use(limiter);
 
-app.use(cors([{
-    origin: 'https://recipe-blog-react.onrender.com'
-},
-{
-    origin: 'http://localhost:3000'
-
-
-
 //middleware
 
 const storage = multer.memoryStorage()
@@ -51,6 +43,13 @@ const upload = multer({
 //routers 
 app.use('/recipe-blog', logonRoutes)
 app.use('/recipe-blog', authMiddleware, upload.single('image'), recipeRoutes)
+
+app.use(cors([{
+    origin: 'https://recipe-blog-react.onrender.com'
+},
+{
+    origin: 'http://localhost:3000'
+}]));
 
 app.get('/rebeca', (req, res) => {
     res.send('Hello World')
