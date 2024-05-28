@@ -17,13 +17,6 @@ const url = process.env.MONGO_URI
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.json())
-
-app.use(cors([{
-    origin: 'https://recipe-blog-react.onrender.com'
-},
-{
-    origin: 'http://localhost:3000'
-
 //security
 app.use(helmet());
 app.use(xss());
@@ -33,6 +26,14 @@ const limiter = rateLimiter({
     max: 100, 
 });
 app.use(limiter);
+
+app.use(cors([{
+    origin: 'https://recipe-blog-react.onrender.com'
+},
+{
+    origin: 'http://localhost:3000'
+
+
 
 //middleware
 
@@ -56,13 +57,13 @@ app.get('/rebeca', (req, res) => {
     console.log('hello world')
 })
 
-const port = 3000
+const port = process.env.PORT || 3000
 
 const start = async () => {
     try {
         await connectDB(url)
         console.log('Connected to MongoDB')
-        app.listen( port, () => {
+        app.listen(3000, () => {
             console.log(`App is running on port ${port}`)
         })
     } catch (error) {
