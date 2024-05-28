@@ -27,11 +27,6 @@ const limiter = rateLimiter({
 });
 app.use(limiter);
 
-
-
-
-
-
 //middleware
 
 const storage = multer.memoryStorage()
