@@ -41,8 +41,7 @@ const upload = multer({
 })
 
 //routers 
-app.use('/recipe-blog', logonRoutes)
-app.use('/recipe-blog', authMiddleware, upload.single('image'), recipeRoutes)
+
 
 app.use(cors([{
     origin: 'https://recipe-blog-react.onrender.com'
@@ -50,6 +49,9 @@ app.use(cors([{
 {
     origin: 'http://localhost:3000'
 }]));
+
+app.use('/recipe-blog', logonRoutes)
+app.use('/recipe-blog', authMiddleware, upload.single('image'), recipeRoutes)
 
 app.get('/rebeca', (req, res) => {
     res.send('Hello World')
