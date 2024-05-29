@@ -11,7 +11,7 @@ const auth = (req, res, next) => {
         return
     }
     
-    const token = authHeader.split(' ')[1]
+    const token = authHeader?.split(' ')[1]
     try {
         if(!authHeader || !authHeader.startsWith('Bearer ')) {
             throw new UnauthenticatedError('Authentication Invalid')
