@@ -28,6 +28,9 @@ const limiter = rateLimiter({
 });
 app.use(limiter);
 
+app.use(cors([{
+    origin: 'https://main.d22dysgea989b6.amplifyapp.com'
+}]));
 //middleware
 
 const storage = multer.memoryStorage()
@@ -44,9 +47,7 @@ const upload = multer({
 //routers 
 
 
-app.use(cors([{
-    origin: 'https://main.d22dysgea989b6.amplifyapp.com'
-}]));
+
 
 app.use('/recipe-blog', logonRoutes)
 app.use('/recipe-blog', authMiddleware, upload.single('image'), recipeRoutes)
