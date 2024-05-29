@@ -33,9 +33,6 @@ app.use(cors([{
     origin: 'https://main.d22dysgea989b6.amplifyapp.com'
 }]));
 //middleware
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*")
-}) 
 
 const storage = multer.memoryStorage()
 
