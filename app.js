@@ -45,9 +45,6 @@ const upload = multer({
 
 app.use(cors([{
     origin: 'https://recipe-blog-react.onrender.com'
-},
-{
-    origin: 'http://localhost:3000'
 }]));
 
 app.use('/recipe-blog', logonRoutes)
