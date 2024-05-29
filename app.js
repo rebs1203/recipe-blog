@@ -26,6 +26,7 @@ const limiter = rateLimiter({
     max: 100, 
 });
 app.use(limiter);
+app.enable('trust proxy')
 
 //middleware
 
