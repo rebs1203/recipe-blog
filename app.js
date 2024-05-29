@@ -28,6 +28,10 @@ const limiter = rateLimiter({
 });
 app.use(limiter);
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*")
+}) 
+
 app.use(cors([{
     origin: 'https://main.d22dysgea989b6.amplifyapp.com'
 }]));
