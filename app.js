@@ -45,7 +45,7 @@ const upload = multer({
 
 
 app.use(cors([{
-    origin: 'https://recipe-blog-react.onrender.com'
+    origin: 'https://main.d22dysgea989b6.amplifyapp.com'
 }]));
 
 app.use('/recipe-blog', logonRoutes)
