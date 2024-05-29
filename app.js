@@ -20,13 +20,13 @@ app.use(express.json())
 //security
 app.use(helmet());
 app.use(xss());
+app.set('trust proxy', 1)
 
 const limiter = rateLimiter({
     windowMs: 15 * 60 * 1000, 
     max: 100, 
 });
 app.use(limiter);
-app.enable('trust proxy')
 
 //middleware
 
